@@ -30,9 +30,6 @@
 #define ROW_4_IS_SET 		((GPIOA->IDR & GPIO_IDR_7) == GPIO_IDR_7)
 
 //**********************************************************************************
-//переменные в которых хранится текущие состояния
-extern static volatile STATE_column stateColumn;
-extern static volatile STATE_key_out stateKeypad;
 
 //**********************************************************************************
 //состояния
@@ -61,16 +58,9 @@ typedef enum {
 	key_out_state_D,
 	key_out_state_E,
 	key_out_state_F,
-	key_out_state_*,
-	key_out_state_#
+	key_out_state_star,
+	key_out_state_sharp
 } STATE_key_out;
-
-//функции для работы с состояниями:
-STATE_column getStateColumn(void);//получить текущий опрашиваемый столбец
-void setStateColumn(STATE_column newState);//установить опрашиваемый столбец
-
-STATE_key_out getStateKeypad(void);//получить текущее состояние клавы
-void setStateKeypad(STATE_key_out newState);//установить новое состояние клавы
 
 //**********************************************************************************
 void keypad_init(void);//инициализация выводов под кнопки

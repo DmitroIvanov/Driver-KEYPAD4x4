@@ -145,14 +145,14 @@ void dispatch_keypad(void)//диспетчер выполняющий задач
 			break;			
 		}
 		/****************************************************************/
-		case key_out_state_*://была нажата кн. *
+		case key_out_state_star://была нажата кн. *
 		{
 			LED_1_OFF;					
 			setStateKeypad(key_out_state_NULL);
 			break;			
 		}
 		/****************************************************************/
-		case key_out_state_#://была нажата кн. #
+		case key_out_state_sharp://была нажата кн. #
 		{
 			LED_1_OFF;					
 			setStateKeypad(key_out_state_NULL);
@@ -169,29 +169,30 @@ void dispatch_keypad(void)//диспетчер выполняющий задач
 ********************************************************************************************/
 void get_keypad_push(void)//опрашиваем клавиатуру
 {
+	static uint8_t flagKey = 0;
 	switch (getStateColumn())//переключаем режимы опроса столбцов
 	{
 		/****************************************************************/
 		case column1://опрашиваем строки 1-го столбца
 		{
 			COLUMN_1_SET;
-			if (ROW_1_IS_SET) 		{setStateKeypad(key_out_state_1);} //если нажатие в 1-й строке, то нажата кн - "1"
-			else if (ROW_2_IS_SET)	{setStateKeypad(key_out_state_4);} //если нажатие во 2-й строке, то нажата кн - "4"
-			else if (ROW_3_IS_SET)	{setStateKeypad(key_out_state_7);}
-			else if (ROW_4_IS_SET)	{setStateKeypad(key_out_state_*);}
-			else 					{setStateKeypad(key_out_state_NULL);}//если ничего не нажато			
-			setStateColumn(column2);
+			if 		(ROW_1_IS_SET && flagKey == 0) 	{setStateKeypad(key_out_state_1);	flagKey = 1;} //если нажатие в 1-й строке, то нажата кн - "1"
+			else if (ROW_2_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_4);	flagKey = 1;} //если нажатие во 2-й строке, то нажата кн - "4"
+			else if (ROW_3_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_7);	flagKey = 1;}
+			else if (ROW_4_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_star);flagKey = 1;}
+			else if (ROW_1_IS_RESET && ROW_2_IS_RESET && ROW_3_IS_RESET && ROW_4_IS_RESET && flagKey == 1) {flagKey = 0;} //антидребезг
+			setStateColumn(column2);			
 			break;			
 		}
 		/****************************************************************/
 		case column2://опрашиваем строки 2-го столбца
 		{
 			COLUMN_2_SET;
-			if (ROW_1_IS_SET) 		{setStateKeypad(key_out_state_2);} //если нажатие в 1-й строке, то нажата кн - "2"
-			else if (ROW_2_IS_SET)	{setStateKeypad(key_out_state_5);} //если нажатие во 2-й строке, то нажата кн - "5"
-			else if (ROW_3_IS_SET)	{setStateKeypad(key_out_state_8);}
-			else if (ROW_4_IS_SET)	{setStateKeypad(key_out_state_0);}
-			else 					{setStateKeypad(key_out_state_NULL);}//если ничего не нажато			
+			if 		(ROW_1_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_2);	flagKey = 1;} //если нажатие в 1-й строке, то нажата кн - "2"
+			else if (ROW_2_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_5);	flagKey = 1;} //если нажатие во 2-й строке, то нажата кн - "5"
+			else if (ROW_3_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_8);	flagKey = 1;}
+			else if (ROW_4_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_0);	flagKey = 1;}
+			else if (ROW_1_IS_RESET && ROW_2_IS_RESET && ROW_3_IS_RESET && ROW_4_IS_RESET && flagKey==1) {flagKey = 0;} //
 			setStateColumn(column3);
 			break;			
 		}
@@ -199,11 +200,11 @@ void get_keypad_push(void)//опрашиваем клавиатуру
 		case column3://опрашиваем строки 3-го столбца
 		{
 			COLUMN_3_SET;
-			if (ROW_1_IS_SET) 		{setStateKeypad(key_out_state_3);} //если нажатие в 1-й строке, то нажата кн - "3"
-			else if (ROW_2_IS_SET)	{setStateKeypad(key_out_state_6);} //если нажатие во 2-й строке, то нажата кн - "6"
-			else if (ROW_3_IS_SET)	{setStateKeypad(key_out_state_9);}
-			else if (ROW_4_IS_SET)	{setStateKeypad(key_out_state_#);}
-			else 					{setStateKeypad(key_out_state_NULL);}//если ничего не нажато			
+			if 		(ROW_1_IS_SET && flagKey == 0) 	{setStateKeypad(key_out_state_3);	flagKey = 1;} //если нажатие в 1-й строке, то нажата кн - "3"
+			else if (ROW_2_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_6);	flagKey = 1;} //если нажатие во 2-й строке, то нажата кн - "6"
+			else if (ROW_3_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_9);	flagKey = 1;}
+			else if (ROW_4_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_sharp);flagKey = 1;}
+			else if (ROW_1_IS_RESET && ROW_2_IS_RESET && ROW_3_IS_RESET && ROW_4_IS_RESET && flagKey==1) {flagKey = 0;} //
 			setStateColumn(column4);
 			break;			
 		}
@@ -211,11 +212,11 @@ void get_keypad_push(void)//опрашиваем клавиатуру
 		case column4://опрашиваем строки 4-го столбца
 		{
 			COLUMN_4_SET;
-			if (ROW_1_IS_SET) 		{setStateKeypad(key_out_state_3);} //если нажатие в 1-й строке, то нажата кн - "A"
-			else if (ROW_2_IS_SET)	{setStateKeypad(key_out_state_6);} //если нажатие во 2-й строке, то нажата кн - "B"
-			else if (ROW_3_IS_SET)	{setStateKeypad(key_out_state_9);}
-			else if (ROW_4_IS_SET)	{setStateKeypad(key_out_state_#);}
-			else 					{setStateKeypad(key_out_state_NULL);}//если ничего не нажато			
+			if 		(ROW_1_IS_SET && flagKey == 0) 	{setStateKeypad(key_out_state_A);	flagKey = 1;} //если нажатие в 1-й строке, то нажата кн - "A"
+			else if (ROW_2_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_B);	flagKey = 1;} //если нажатие во 2-й строке, то нажата кн - "B"
+			else if (ROW_3_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_C);	flagKey = 1;}
+			else if (ROW_4_IS_SET && flagKey == 0)	{setStateKeypad(key_out_state_D);	flagKey = 1;}
+			else if (ROW_1_IS_RESET && ROW_2_IS_RESET && ROW_3_IS_RESET && ROW_4_IS_RESET && flagKey==1) {flagKey = 0;} //
 			setStateColumn(column1);
 			break;			
 		}		
